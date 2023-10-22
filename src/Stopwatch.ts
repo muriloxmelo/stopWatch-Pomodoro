@@ -73,10 +73,10 @@ export default class StopWatch {
     m.id = "minutes";
     s.id = "seconds";
 
-    const initButton = document.createElement("button");
-    const init = this.container.appendChild(initButton);
-    initButton.innerText = "START";
-    init.id = "initButton";
+    const startButton = document.createElement("button");
+    const start = this.container.appendChild(startButton);
+    startButton.innerText = "START";
+    start.id = "startButton";
 
     const pauseButton = document.createElement("button");
     const pause = this.container.appendChild(pauseButton);
@@ -88,14 +88,21 @@ export default class StopWatch {
     reset.innerText = "RESET";
     reset.id = "resetButton";
 
-    init.addEventListener("click", () => {
+    start.addEventListener("click", () => {
+      if (startButton.disabled === true) {
+        return null;
+      }
       if (this.timeouts.length - this.timeoutsPass.length === 0) {
         this.timeoutsPass = [];
         this.timeouts = [];
+
+        startButton.disabled = true;
         this.setTime(this.inicialMinute);
         this.play();
       } else {
         this.play();
+
+        startButton.disabled = true;
       }
     });
 
@@ -103,6 +110,7 @@ export default class StopWatch {
       this.timeouts.forEach((id) => {
         clearInterval(id);
       });
+      startButton.disabled = false;
     });
 
     reset.addEventListener("click", () => {
@@ -112,6 +120,7 @@ export default class StopWatch {
       this.timeoutsPass = [];
       this.timeouts = [];
       this.reset();
+      start.disabled = false;
     });
   }
 
