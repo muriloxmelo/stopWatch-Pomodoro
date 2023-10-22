@@ -1,20 +1,15 @@
 export default class StopWatch {
-  container;
-  inicialMinute;
-  controls;
-  date: Date;
-  minutesContainer: Element;
-  secondsContainer: Element;
-  timeouts: number[];
-  timeoutsPass: number[];
-  constructor(
-    container: Element,
-    inicialMinute: number = 25,
-    controls: Element
-  ) {
+  private container;
+  private inicialMinute;
+
+  private date: Date;
+  private minutesContainer: Element;
+  private secondsContainer: Element;
+  private timeouts: number[];
+  private timeoutsPass: number[];
+  constructor(container: Element, inicialMinute: number = 25) {
     this.container = container;
     this.inicialMinute = inicialMinute;
-    this.controls = controls;
     this.date = new Date();
     this.minutesContainer = document.createElement("span");
     this.secondsContainer = document.createElement("span");
@@ -24,8 +19,7 @@ export default class StopWatch {
   }
 
   reset() {
-    this.date.setMinutes(0);
-    this.date.setSeconds(0);
+    this.setTime(this.inicialMinute);
     this.show();
   }
 
@@ -35,6 +29,7 @@ export default class StopWatch {
   }
 
   play() {
+    /* probably new feature in the future */
     // function addMinutes(date: Date, minutes: number) {
     //   date.setMinutes(date.getMinutes() + minutes);
     //   return date;
@@ -72,38 +67,26 @@ export default class StopWatch {
     }
   }
 
-  addControls() {
+  private addControls() {
     const m = this.container.appendChild(this.minutesContainer);
     const s = this.container.appendChild(this.secondsContainer);
     m.id = "minutes";
     s.id = "seconds";
-    const pauseButton = document.createElement("button");
+
     const initButton = document.createElement("button");
-    const TESTE = document.createElement("button");
-    const resetButton = document.createElement("button");
-    const pause = this.container.appendChild(pauseButton);
     const init = this.container.appendChild(initButton);
-    const TESTE2 = this.container.appendChild(TESTE);
-    const resetar = this.container.appendChild(resetButton);
+    initButton.innerText = "START";
+    init.id = "initButton";
+
+    const pauseButton = document.createElement("button");
+    const pause = this.container.appendChild(pauseButton);
     pauseButton.innerText = "PAUSE";
-    initButton.innerText = "INICIAR";
-    TESTE2.innerText = "TESTE";
-    resetar.innerText = "RESETAR";
+    pause.id = "pauseButton";
 
-    resetar.addEventListener("click", () => {
-      this.timeouts.forEach((id) => {
-        clearInterval(id);
-      });
-      this.timeoutsPass = [];
-      this.timeouts = [];
-      this.reset();
-    });
-
-    TESTE2.addEventListener("click", () => {
-      console.log(this.timeouts);
-      console.log(this.timeoutsPass);
-      // console.log("RES:", this.timeouts.length - this.timeoutsPass.length);
-    });
+    const resetButton = document.createElement("button");
+    const reset = this.container.appendChild(resetButton);
+    reset.innerText = "RESET";
+    reset.id = "resetButton";
 
     init.addEventListener("click", () => {
       if (this.timeouts.length - this.timeoutsPass.length === 0) {
@@ -121,9 +104,18 @@ export default class StopWatch {
         clearInterval(id);
       });
     });
+
+    reset.addEventListener("click", () => {
+      this.timeouts.forEach((id) => {
+        clearInterval(id);
+      });
+      this.timeoutsPass = [];
+      this.timeouts = [];
+      this.reset();
+    });
   }
 
-  show() {
+  private show() {
     if (this.date.getMinutes() / 10 < 1) {
       this.minutesContainer.innerHTML = `0${this.date.getMinutes()}:`;
     } else {
@@ -137,9 +129,10 @@ export default class StopWatch {
     }
   }
 
-  init() {
+  private init() {
     this.reset();
     this.addControls();
     this.setTime(this.inicialMinute);
+    this.show();
   }
 }
