@@ -29,6 +29,9 @@ export default class StopWatch {
 
   reset() {
     this.clearIntervals();
+    this.timeoutsPass = [];
+    this.timeouts = [];
+
     this.setTime(this.inicialMinute);
     if (this.startButtonStatus()) {
       this.startButton.disabled = false;
@@ -80,20 +83,25 @@ export default class StopWatch {
     });
 
     this.setArrayPomodoro(minutes, pause, longPause);
+
     skipButton.addEventListener("click", () => {
       if (this.arrayPomodoro.length === 1) {
+        this.reset();
         this.setArrayPomodoro(minutes, pause, longPause);
         this.setTime(this.arrayPomodoro[0]);
-        this.reset();
       } else {
+        this.reset();
         this.arrayPomodoro.shift();
         this.setTime(this.arrayPomodoro[0]);
-        this.reset();
       }
     });
   }
 
-  setArrayPomodoro(time: number, pause: number, longPause: number): number[] {
+  private setArrayPomodoro(
+    time: number,
+    pause: number,
+    longPause: number
+  ): number[] {
     const array = [time, pause, time, pause, time, pause, time, longPause];
     this.arrayPomodoro = array;
     return array;
@@ -131,7 +139,7 @@ export default class StopWatch {
     this.show();
   }
 
-  play() {
+  private play() {
     /* probably new feature in the future */
     // function addMinutes(date: Date, minutes: number) {
     //   date.setMinutes(date.getMinutes() + minutes);
@@ -194,9 +202,9 @@ export default class StopWatch {
     pause.id = "pauseButton";
 
     const resetButton = document.createElement("button");
-    const reset = this.container.appendChild(resetButton);
-    reset.innerText = "RESET";
-    reset.id = "resetButton";
+    this.container.appendChild(resetButton);
+    resetButton.innerText = "RESET";
+    resetButton.id = "resetButton";
 
     this.startButton.addEventListener("click", () => {
       if (this.startButtonStatus() === true) {
@@ -220,10 +228,8 @@ export default class StopWatch {
       this.startButton.disabled = false;
     });
 
-    reset.addEventListener("click", () => {
+    resetButton.addEventListener("click", () => {
       this.reset();
-      this.timeoutsPass = [];
-      this.timeouts = [];
     });
   }
 
