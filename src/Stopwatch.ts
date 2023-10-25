@@ -6,7 +6,6 @@ export default class StopWatch {
   private secondsContainer: Element;
   private hoursContainer: Element;
   private startButton: HTMLButtonElement;
-  private pomodoroStatus: boolean;
   private arrayPomodoro: number[];
   private timeouts: number[];
   private timeoutsPass: number[];
@@ -18,7 +17,6 @@ export default class StopWatch {
     this.secondsContainer = document.createElement("span");
     this.hoursContainer = document.createElement("span");
     this.startButton = document.createElement("button");
-    this.pomodoroStatus = false;
     this.timeouts = [];
     this.timeoutsPass = [];
     this.arrayPomodoro = [];
@@ -39,7 +37,6 @@ export default class StopWatch {
   }
 
   setPomodoro(minutes: number = 25, pause: number = 5, longPause: number = 15) {
-    this.pomodoroStatus = true;
     const skipButton = document.createElement("button");
     const minInput = document.createElement("input");
     const pauseInput = document.createElement("input");
@@ -83,15 +80,13 @@ export default class StopWatch {
     });
 
     this.setArrayPomodoro(minutes, pause, longPause);
-    const ref = this.arrayPomodoro.map((i) => i);
     skipButton.addEventListener("click", () => {
       if (this.arrayPomodoro.length === 1) {
-        this.arrayPomodoro = ref;
+        this.setArrayPomodoro(minutes, pause, longPause);
         this.setTime(this.arrayPomodoro[0]);
         this.reset();
       } else {
         this.arrayPomodoro.shift();
-
         this.setTime(this.arrayPomodoro[0]);
         this.reset();
       }
@@ -111,7 +106,7 @@ export default class StopWatch {
     longPauseInput: HTMLInputElement
   ) {
     this.container.appendChild(skipButton);
-    skipButton.innerText = "skip";
+    skipButton.innerText = "SKIP";
     skipButton.id = "skipButton";
 
     this.container.appendChild(minInput);
@@ -235,7 +230,6 @@ export default class StopWatch {
     if (this.date.getHours() >= 1) {
       this.hoursContainer.innerHTML = `0${this.date.getHours()}:`;
     } else if (this.date.getHours() > 10) {
-      console.log(this.date.getHours());
       this.hoursContainer.innerHTML = `${this.date.getHours()}:`;
     } else if (this.date.getHours() === 0) {
       this.hoursContainer.innerHTML = "";
