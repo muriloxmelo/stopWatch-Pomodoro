@@ -227,7 +227,7 @@ export default class StopWatch {
   }
 
   private show() {
-    if (this.date.getHours() >= 1) {
+    if (this.date.getHours() < 10) {
       this.hoursContainer.innerHTML = `0${this.date.getHours()}:`;
     } else if (this.date.getHours() > 10) {
       this.hoursContainer.innerHTML = `${this.date.getHours()}:`;
