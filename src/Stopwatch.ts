@@ -27,16 +27,38 @@ export default class StopWatch {
     return this.startButton.disabled;
   }
 
+  // METHODS
   reset() {
     this.clearIntervals();
     this.timeoutsPass = [];
     this.timeouts = [];
-
     this.setTime(this.inicialMinute);
     if (this.startButtonStatus()) {
       this.startButton.disabled = false;
     }
     this.show();
+  }
+
+  start() {
+    if (this.startButtonStatus() === true) {
+      return null;
+    }
+    if (this.timeouts.length - this.timeoutsPass.length === 0) {
+      this.timeoutsPass = [];
+      this.timeouts = [];
+
+      this.startButton.disabled = true;
+      this.setTime(this.inicialMinute);
+      this.play();
+    } else {
+      this.play();
+      this.startButton.disabled = true;
+    }
+  }
+
+  pause() {
+    this.clearIntervals();
+    this.startButton.disabled = false;
   }
 
   setPomodoro(minutes: number = 25, pause: number = 5, longPause: number = 15) {
@@ -107,7 +129,7 @@ export default class StopWatch {
     return array;
   }
 
-  controlsPomodoro(
+  private controlsPomodoro(
     skipButton: HTMLButtonElement,
     minInput: HTMLInputElement,
     pauseInput: HTMLInputElement,
@@ -178,7 +200,7 @@ export default class StopWatch {
     }
   }
 
-  clearIntervals() {
+  private clearIntervals() {
     this.timeouts.forEach((id) => {
       clearInterval(id);
     });
@@ -207,25 +229,11 @@ export default class StopWatch {
     resetButton.id = "resetButton";
 
     this.startButton.addEventListener("click", () => {
-      if (this.startButtonStatus() === true) {
-        return null;
-      }
-      if (this.timeouts.length - this.timeoutsPass.length === 0) {
-        this.timeoutsPass = [];
-        this.timeouts = [];
-
-        this.startButton.disabled = true;
-        this.setTime(this.inicialMinute);
-        this.play();
-      } else {
-        this.play();
-        this.startButton.disabled = true;
-      }
+      this.start();
     });
 
     pause.addEventListener("click", () => {
-      this.clearIntervals();
-      this.startButton.disabled = false;
+      this.pause();
     });
 
     resetButton.addEventListener("click", () => {
