@@ -180,6 +180,7 @@ export default class StopWatch {
     const h = this.container.appendChild(this.hoursContainer);
     const m = this.container.appendChild(this.minutesContainer);
     const s = this.container.appendChild(this.secondsContainer);
+    h.id = "hours";
     m.id = "minutes";
     s.id = "seconds";
 
